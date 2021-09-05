@@ -1,0 +1,37 @@
+#include <LiquidCrystal_I2C.h>
+int analogPin= 0;
+int raw= 0;
+int Vin= 5;
+float Vout= 0;
+float R1= 1000;
+float R2= 0;
+float buffer= 0;
+
+LiquidCrystal_I2C lcd(0x27, 16, 2); // I2C address 0x27, 16 column and 2 rows
+
+void setup() {
+  lcd.init(); // initialize the lcd
+  lcd.backlight();
+  Serial.begin(9600);
+
+    lcd.setCursor(0, 0);         // move cursor to   (0, 0)
+  lcd.print("test");        // print message at (0, 0)
+}
+
+void loop()
+{
+raw= analogRead(analogPin);
+if(raw) 
+{
+buffer= raw * Vin;
+Vout= (buffer)/1024.0;
+buffer= (Vin/Vout) -1;
+R2= R1 * buffer;
+lcd.clear();
+lcd.print("Vout: ");
+lcd.println(Vout);
+lcd.print("R2: ");
+lcd.println(R2);
+delay(1000);
+}
+}
